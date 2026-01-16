@@ -5,6 +5,7 @@ on:
     branches: [ "master", "main", "develop" ]
   pull_request:
     branches: [ "master", "main", "develop" ]
+  workflow_dispatch: # Allows manual triggering from Actions tab
 
 env:
   REGISTRY: ghcr.io
@@ -37,10 +38,10 @@ jobs:
           tags: |
             type=ref,event=branch
             type=ref,event=pr
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
             type=sha,format=long
             type=raw,value=latest,enable=${{ github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' }}
+          flavor: |
+            latest=auto
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
