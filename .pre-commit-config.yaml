@@ -45,7 +45,7 @@ repos:
       # Frontend Build Check (ensures the project builds)
       - id: frontend-build
         name: Frontend Build Check
-        entry: bash -c 'cd frontend && npm run build'
+        entry: bash -c 'cd frontend && (rm -rf dist/ 2>/dev/null || sudo rm -rf dist/ 2>/dev/null || true) && npm run build'
         language: system
         files: ^frontend/src/.*\.(ts|tsx)$
         pass_filenames: false

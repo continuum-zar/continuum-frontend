@@ -22,7 +22,7 @@ jobs:
 
     - name: Install frontend dependencies
       run: |
-        cd continuum-frontend
+        cd frontend
         npm install
 
     - name: Run pre-commit
