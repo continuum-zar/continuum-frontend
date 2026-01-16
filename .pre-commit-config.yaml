@@ -1,4 +1,4 @@
-# Pre-commit hooks configuration
+# Pre-commit hooks configuration for Continuum Frontend
 # Run `pre-commit install` to set up the git hooks
 # Run `pre-commit run --all-files` to run all hooks manually
 
@@ -8,13 +8,20 @@ repos:
     rev: v4.6.0
     hooks:
       - id: trailing-whitespace
+        exclude: '\.venv/|node_modules/|dist/|build/'
       - id: end-of-file-fixer
+        exclude: '\.venv/|node_modules/|dist/|build/'
       - id: check-yaml
+        exclude: '\.venv/|node_modules/|dist/|build/'
       - id: check-json
+        exclude: '\.venv/|node_modules/|dist/|build/'
       - id: check-added-large-files
-        args: ['--maxkb=1000']
+        args: ['--maxkb=2000']  # Increased for large SVG assets
+        exclude: '\.venv/|node_modules/|dist/|build/'
       - id: check-merge-conflict
+        exclude: '\.venv/|node_modules/|dist/|build/'
       - id: detect-private-key
+        exclude: '\.venv/|node_modules/|dist/|build/'
 
   # Local hooks for project-specific checks
   - repo: local
@@ -22,24 +29,24 @@ repos:
       # Frontend TypeScript Type Check
       - id: frontend-typecheck
         name: Frontend Type Check (TypeScript)
-        entry: bash -c 'cd continuum-frontend && npm run typecheck'
+        entry: bash -c 'cd frontend && npm run typecheck'
         language: system
-        files: ^continuum-frontend/src/.*\.(ts|tsx)$
+        files: ^frontend/src/.*\.(ts|tsx)$
         pass_filenames: false
 
       # Frontend ESLint
       - id: frontend-lint
         name: Frontend Lint (ESLint)
-        entry: bash -c 'if command -v npm > /dev/null 2>&1 && [ -f continuum-frontend/package.json ]; then cd continuum-frontend && npm run lint || echo "ESLint check skipped (dependencies not installed)"; else echo "ESLint check skipped (npm not available)"; fi'
+        entry: bash -c 'if command -v npm > /dev/null 2>&1 && [ -f frontend/package.json ]; then cd frontend && npm run lint || echo "ESLint check skipped (dependencies not installed)"; else echo "ESLint check skipped (npm not available)"; fi'
         language: system
-        files: ^continuum-frontend/src/.*\.(ts|tsx)$
+        files: ^frontend/src/.*\.(ts|tsx)$
         pass_filenames: false
 
       # Frontend Build Check (ensures the project builds)
       - id: frontend-build
         name: Frontend Build Check
-        entry: bash -c 'cd continuum-frontend && npm run build'
+        entry: bash -c 'cd frontend && npm run build'
         language: system
-        files: ^continuum-frontend/src/.*\.(ts|tsx)$
+        files: ^frontend/src/.*\.(ts|tsx)$
         pass_filenames: false
         stages: [pre-push]  # Only run on push, not commit (takes longer)

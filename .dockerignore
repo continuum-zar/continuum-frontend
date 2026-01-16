@@ -1,11 +1,6 @@
-# Virtual environments
-**/venv/
-**/.venv/
-**/__pycache__/
-**/*.pyc
-
 # Node
 **/node_modules/
+**/dist/
 
 # Git
 .git/
@@ -16,17 +11,10 @@
 .idea/
 *.swp
 
-# Test and cache
-**/.pytest_cache/
-**/.coverage
-**/htmlcov/
-
-# Database files (local dev only)
-**/*.db
-
 # Documentation
 *.md
-!backend/README.md
+!frontend/README.md
 
-# Frontend (not needed for backend deployment)
-continuum-frontend/
+# Build artifacts
+.npm/
+npm-debug.log
