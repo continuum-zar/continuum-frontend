@@ -10,7 +10,7 @@ const Overview = () => {
 
         <div className="flex-1 min-w-0">
           <div
-            className="w-full max-w-[1264px] min-h-[962px] bg-white rounded-[8px] border border-[#EBEDEE]
+            className="w-full min-h-[962px] bg-white rounded-[8px] border border-[#EBEDEE]
             pt-[16px] pr-[16px] pb-[16px] pl-[24px]
             flex flex-col gap-[16px]
             shadow-[0px_2px_4px_0px_rgba(15,15,31,0.04),0px_7px_7px_0px_rgba(15,15,31,0.03),0px_16px_10px_0px_rgba(15,15,31,0.02),0px_28px_11px_0px_rgba(15,15,31,0.01),0px_44px_12px_0px_rgba(15,15,31,0)]"
