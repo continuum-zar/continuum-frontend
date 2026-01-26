@@ -23,6 +23,9 @@ import Team from './pages/Dashboard/Team';
 import Projects from './pages/Projects';
 import ProjectSettings from './pages/Projects/ProjectSettings';
 
+// Onboarding pages
+import Usage from './pages/Onboarding/Usage';
+
 const router = createBrowserRouter([
   {
     path: '/',
@@ -47,6 +50,9 @@ const router = createBrowserRouter([
       // Projects
       { path: 'projects', element: <ProtectedRoute><Projects /></ProtectedRoute> },
       { path: 'projects/:projectId/settings', element: <ProtectedRoute><ProjectSettings /></ProtectedRoute> },
+
+      // Onboarding
+      { path: 'onboarding/usage', element: <Usage /> },
     ],
   },
 ]);
