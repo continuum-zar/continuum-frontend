@@ -1,6 +1,7 @@
 import Sidebar from "../../components/Sidebar";
 import ProjectHeader from "../../components/ProjectHeader";
 import ProjectStatus from "../../components/ProjectStatus";
+import ActionCard from "../../components/ActionCard";
 
 const Overview = () => {
   return (
@@ -19,9 +20,29 @@ const Overview = () => {
 
             <div className="w-full h-[1.14px] bg-[#EBEDEE]" />
 
-            {/* Dashboard content → Project Status Indicator */}
-            <div className="w-full pt-[48px] pb-[32px] flex flex-col gap-[64px]">
+            {/* Dashboard content */}
+            <div className="w-full pt-[48px] pb-[32px] flex flex-col items-center gap-[64px]">
+              {/* Status */}
               <ProjectStatus />
+
+              {/* Action Cards Row */}
+              <div className="w-full flex justify-center">
+                <div className="w-[815px] h-[156px] flex gap-[10px]">
+                  <ActionCard
+                    variant="newSprint"
+                    onNewSprintClick={() => {
+                      // placeholder click handling
+                      console.log("New sprint clicked");
+                    }}
+                  />
+                  <ActionCard variant="dropFiles" />
+                </div>
+              </div>
+
+              {/* NOTE:
+                  Later you’ll add Sprints + Members sections here if they exist in your app.
+                  The wrapper gap-[64px] matches the Figma “stack spacing” between sections.
+              */}
             </div>
           </div>
         </div>
