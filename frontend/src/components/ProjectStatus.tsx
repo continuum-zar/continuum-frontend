@@ -10,7 +10,7 @@ export default function ProjectStatus() {
   const STROKE = 17;
   const ARC_COLOR = "#E4EAEC";
 
- 
+
   const cx = ARC_W / 2;
   const cy = ARC_H;
   const r = ARC_W / 2 - STROKE / 2;
@@ -21,7 +21,7 @@ export default function ProjectStatus() {
   const endX = cx + r;
   const endY = cy;
 
-  
+
   const arcPath = `M ${startX} ${cy} A ${r} ${r} 0 0 1 ${endX} ${endY}`;
 
   // Static value 0
@@ -42,7 +42,7 @@ export default function ProjectStatus() {
         position: "relative",
       }}
     >
-   
+
       <svg
         width={ARC_W}
         height={ARC_H}
@@ -50,7 +50,7 @@ export default function ProjectStatus() {
         role="img"
         aria-label="Project status indicator"
       >
-     
+
         <path
           d={arcPath}
           fill="none"
@@ -59,11 +59,11 @@ export default function ProjectStatus() {
           strokeLinecap="round"
         />
 
-       
+
         <circle cx={startX} cy={startY} r={DOT_R} fill={DOT_FILL} />
       </svg>
 
-      
+
       <div
         style={{
           position: "absolute",
