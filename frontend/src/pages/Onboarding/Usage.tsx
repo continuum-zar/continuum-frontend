@@ -96,17 +96,23 @@ const Usage = () => {
         {/* Option Cards */}
         <div className="flex flex-col items-center gap-6">
           <UsageOptionCard
-            type="work"
+            title="For work"
+            description="Track projects, company goals, meeting notes"
+            icon={<img src="/onboarding-icons/briefcase-business.svg" alt="For work" style={{ width: "68px", height: "68px" }} />}
             isActive={selectedUsage === "work"}
             onClick={() => handleCardClick("work")}
           />
           <UsageOptionCard
-            type="personal"
+            title="For personal life"
+            description="Write better, think more clearly, stay organised"
+            icon={<img src="/onboarding-icons/signature.svg" alt="For personal life" style={{ width: "68px", height: "68px" }} />}
             isActive={selectedUsage === "personal"}
             onClick={() => handleCardClick("personal")}
           />
           <UsageOptionCard
-            type="school"
+            title="For school"
+            description="Keep notes, research, and tasks in one place"
+            icon={<img src="/onboarding-icons/graduation-cap.svg" alt="For school" style={{ width: "68px", height: "68px" }} />}
             isActive={selectedUsage === "school"}
             onClick={() => handleCardClick("school")}
           />

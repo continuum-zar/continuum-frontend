@@ -1,38 +1,20 @@
-// import { Briefcase, PenTool, GraduationCap } from "lucide-react"; // Removed as we are using SVGs
-
-type UsageType = "work" | "personal" | "school";
+import type { ReactNode } from "react";
 
 interface UsageOptionCardProps {
-  type: UsageType;
+  title: string;
+  description: string;
+  icon: ReactNode;
   isActive: boolean;
   onClick: () => void;
 }
 
-const cardData = {
-  work: {
-    iconSrc: "/onboarding-icons/briefcase-business.svg",
-    title: "For work",
-    description: "Track projects, company goals, meeting notes",
-  },
-  personal: {
-    iconSrc: "/onboarding-icons/signature.svg",
-    title: "For personal life",
-    description: "Write better, think more clearly, stay organised",
-  },
-  school: {
-    iconSrc: "/onboarding-icons/graduation-cap.svg",
-    title: "For school",
-    description: "Keep notes, research, and tasks in one place",
-  },
-};
-
 export default function UsageOptionCard({
-  type,
+  title,
+  description,
+  icon,
   isActive,
   onClick,
 }: UsageOptionCardProps) {
-  const data = cardData[type];
-
   return (
     <div
       role="button"
@@ -58,8 +40,8 @@ export default function UsageOptionCard({
       }}
     >
       {/* Icon */}
-      <div style={{ flexShrink: 0 }}>
-        <img src={data.iconSrc} alt={data.title} style={{ width: "68px", height: "68px", opacity: 1 }} />
+      <div style={{ flexShrink: 0, width: "68px", height: "68px", display: "flex", alignItems: "center", justifyContent: "center" }}>
+        {icon}
       </div>
 
       {/* Text Block */}
@@ -75,7 +57,7 @@ export default function UsageOptionCard({
             color: isActive ? "#0B191F" : "#727D83",
           }}
         >
-          {data.title}
+          {title}
         </div>
 
         {/* Description */}
@@ -89,7 +71,7 @@ export default function UsageOptionCard({
             color: "#727D83",
           }}
         >
-          {data.description}
+          {description}
         </div>
       </div>
     </div>
