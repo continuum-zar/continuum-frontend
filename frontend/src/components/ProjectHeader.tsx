@@ -1,5 +1,6 @@
 import { useState } from "react";
 
+
 const ProjectHeader = () => {
   const [isClientVisible, setIsClientVisible] = useState(true);
   const [isExportOpen, setIsExportOpen] = useState(false);
@@ -10,7 +11,6 @@ const ProjectHeader = () => {
   return (
     <div className="w-full">
       <div className="w-full h-[32px] flex items-center justify-between">
-
         <div className="h-[32px] flex items-center gap-[8px] min-w-0">
           <img
             src="/icons/folder-open-dot.svg"
@@ -22,9 +22,7 @@ const ProjectHeader = () => {
           </p>
         </div>
 
-
         <div className="h-[32px] flex items-center justify-end gap-[8px]">
-
           {isClientVisible && (
             <div
               className="w-[258px] h-[32px] rounded-full border border-[#E9EEF5] bg-[#EEF3F8]
@@ -87,7 +85,6 @@ const ProjectHeader = () => {
             >
               Export
               <span className={`transition-transform ${isExportOpen ? "rotate-180" : ""}`}>
-                {/* chevron-down icon */}
                 <svg
                   width="16"
                   height="16"
@@ -135,6 +132,8 @@ const ProjectHeader = () => {
           </div>
         </div>
       </div>
+
+
     </div>
   );
 };
