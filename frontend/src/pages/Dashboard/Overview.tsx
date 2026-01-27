@@ -4,6 +4,7 @@ import ProjectHeader from "../../components/ProjectHeader";
 import ProjectStatus from "../../components/ProjectStatus";
 import ActionCard from "../../components/ActionCard";
 import SprintCard from "../../components/SprintCard";
+import MembersSection from "../../components/MembersSection";
 import { Info } from "lucide-react";
 
 const Overview = () => {
@@ -45,7 +46,6 @@ const Overview = () => {
                 </div>
               </div>
 
-
               <div className="w-full px-[12px] sm:px-0">
                 <div className="w-full max-w-[815px] mx-auto flex flex-col gap-[24px]">
                   {/* Sprints heading */}
@@ -58,12 +58,10 @@ const Overview = () => {
 
                   {/* container */}
                   <div className="w-full rounded-[8px] border border-[#EBEDEE] bg-white overflow-hidden relative">
-
                     <div className="pointer-events-none absolute inset-0 hidden sm:block">
                       <div className="absolute left-1/3 top-[16px] bottom-[16px] w-[1px] bg-[#F2F4F7]" />
                       <div className="absolute left-2/3 top-[16px] bottom-[16px] w-[1px] bg-[#F2F4F7]" />
                     </div>
-
 
                     <div className="grid grid-cols-1 sm:grid-cols-3 sm:h-[163px]">
                       <SprintCard
@@ -94,6 +92,9 @@ const Overview = () => {
                       />
                     </div>
                   </div>
+
+                  {/* Members section  */}
+                  <MembersSection />
                 </div>
               </div>
 
