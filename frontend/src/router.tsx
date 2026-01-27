@@ -23,6 +23,9 @@ import Team from './pages/Dashboard/Team';
 import Projects from './pages/Projects';
 import ProjectSettings from './pages/Projects/ProjectSettings';
 
+// Onboarding pages
+import JobDescription from './pages/Onboarding/JobDescription';
+
 const router = createBrowserRouter([
   {
     path: '/',
@@ -39,6 +42,9 @@ const router = createBrowserRouter([
       { path: 'loading', element: <Loading /> },
       { path: 'email-verification', element: <EmailVerification /> },
       { path: 'sign-up', element: <PublicRoute><SignUp /></PublicRoute> },
+
+      // Onboarding
+      { path: 'onboarding/job-description', element: <JobDescription /> },
 
       // Dashboard
       { path: 'dashboard', element: <ProtectedRoute><Overview /></ProtectedRoute> },
