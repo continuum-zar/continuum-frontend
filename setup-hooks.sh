@@ -69,13 +69,29 @@ echo "🪝 Installing Git Hooks..."
 
 # Ensure pre-commit is installed
 if ! command_exists pre-commit; then
-    echo "  Pre-commit not found. Creating a local virtual environment for it..."
+    echo "  Pre-commit not found. Installing..."
     if [ ! -d ".venv" ]; then
-        python3 -m venv .venv
+        if python3 -m venv .venv 2>/dev/null; then
+            :
+        else
+            echo "  Virtual environment not available (install python3-venv for it). Using user install..."
+            pip3 install --user pre-commit -q
+            export PATH="${HOME}/.local/bin:${PATH}"
+            if ! command_exists pre-commit; then
+                echo -e "${RED}Install failed or pre-commit not in PATH.${NC}"
+                echo "  On Debian/Ubuntu you can either:"
+                echo "    apt install python3.12-venv   # then re-run this script, or"
+                echo "    pip3 install --user pre-commit && export PATH=\"\$HOME/.local/bin:\$PATH\""
+                exit 1
+            fi
+            echo -e "  ${GREEN}✓${NC} Pre-commit installed for user"
+        fi
     fi
-    source .venv/bin/activate
-    pip install pre-commit -q
-    echo -e "  ${GREEN}✓${NC} Pre-commit installed in .venv"
+    if [ -d ".venv" ]; then
+        source .venv/bin/activate
+        pip install pre-commit -q
+        echo -e "  ${GREEN}✓${NC} Pre-commit installed in .venv"
+    fi
 fi
 
 # Function to run pre-commit (from venv if needed)
