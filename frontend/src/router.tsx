@@ -27,6 +27,7 @@ import ProjectSettings from './pages/Projects/ProjectSettings';
 import Usage from './pages/Onboarding/Usage';
 import Collaboration from './pages/Onboarding/Collaboration';
 import RoleSelection from './pages/Onboarding/RoleSelection';
+import FunctionSelection from './pages/Onboarding/FunctionSelection';
 
 const router = createBrowserRouter([
   {
@@ -57,6 +58,7 @@ const router = createBrowserRouter([
       { path: 'onboarding/usage', element: <Usage /> },
       { path: 'onboarding/collaboration', element: <Collaboration /> },
       { path: 'onboarding/role', element: <RoleSelection /> },
+      { path: 'onboarding/function', element: <FunctionSelection /> },
     ],
   },
 ]);
