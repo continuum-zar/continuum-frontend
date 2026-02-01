@@ -1,4 +1,7 @@
-import axiosClient from './axiosClient';
+/**
+ * Auth API – client-only stubs. No backend requests.
+ * Login/register flow is handled by useAuth with local state only.
+ */
 
 export interface LoginCredentials {
   email: string;
@@ -26,44 +29,57 @@ export interface AuthResponse {
   user?: User;
 }
 
+const MOCK_TOKEN = 'local-auth-token';
+
+function mockUser(overrides: Partial<User> = {}): User {
+  return {
+    id: 'local-user',
+    email: 'user@example.com',
+    first_name: 'User',
+    last_name: '',
+    ...overrides,
+  };
+}
+
 export const authApi = {
   login: async (credentials: LoginCredentials): Promise<AuthResponse> => {
-    const response = await axiosClient.post('/auth/login', credentials);
-    const { access_token, refresh_token } = response.data;
-
-    // FETCH USER (Backend doesn't return it on login)
-    const userResponse = await axiosClient.get('/users/me', {
-      headers: { Authorization: `Bearer ${access_token}` }
-    });
-
     return {
-      access_token,
-      refresh_token,
-      user: userResponse.data
+      access_token: MOCK_TOKEN,
+      refresh_token: MOCK_TOKEN,
+      user: mockUser({ email: credentials.email }),
     };
   },
 
   register: async (data: RegisterData): Promise<AuthResponse> => {
-    const response = await axiosClient.post('/auth/register', data);
-    return response.data;
+    return {
+      access_token: MOCK_TOKEN,
+      refresh_token: MOCK_TOKEN,
+      user: mockUser({
+        email: data.email,
+        first_name: data.first_name,
+        last_name: data.last_name,
+      }),
+    };
   },
 
   logout: async (): Promise<void> => {
-    await axiosClient.post('/v1/auth/logout');
+    // No-op
   },
 
-  getCurrentUser: async () => {
-    const response = await axiosClient.get('/users/me');
-    return response.data;
+  getCurrentUser: async (): Promise<User> => {
+    return mockUser();
   },
 
   forgotPassword: async (email: string): Promise<{ message: string }> => {
-    const response = await axiosClient.post(`/auth/password-recovery/${email}`);
-    return response.data;
+    void email;
+    return { message: 'Check your email for reset instructions.' };
   },
 
-  resetPassword: async (data: { token: string; new_password: string }): Promise<{ message: string }> => {
-    const response = await axiosClient.post('/auth/reset-password', data);
-    return response.data;
+  resetPassword: async (data: {
+    token: string;
+    new_password: string;
+  }): Promise<{ message: string }> => {
+    void data;
+    return { message: 'Password has been reset.' };
   },
 };

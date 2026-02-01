@@ -41,8 +41,8 @@ const EmailVerification = () => {
       //  navigate after a brief delay
       await new Promise(resolve => setTimeout(resolve, 500));
 
-      // Navigate to loading screen
-      navigate('/loading');
+      // Navigate to loading (animation), then onboarding
+      navigate('/loading', { state: { from: 'register' } });
     } catch (err) {
       setError('Verification failed. Please try again.');
       console.error('Verification error:', err);
