@@ -2,6 +2,12 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ChevronLeft, Check } from "lucide-react";
 
+function getRoleBackPath(): string {
+    const usage = localStorage.getItem("continuum_usage_mode");
+    if (usage === "work") return "/onboarding/collaboration";
+    return "/onboarding/usage";
+}
+
 const roles = [
     "Team member",
     "Manager",
@@ -16,33 +22,49 @@ const roles = [
 
 export default function RoleSelection() {
     const navigate = useNavigate();
-    const [selectedRole, setSelectedRole] = useState<string | null>(null);
+    const [selectedRoles, setSelectedRoles] = useState<string[]>([]);
 
-    // Load saved preference
+    // Load saved preferences (support legacy single role or array)
     useEffect(() => {
-        const saved = localStorage.getItem("continuum_role");
-        if (saved && roles.includes(saved)) {
-            setSelectedRole(saved);
+        const saved = localStorage.getItem("continuum_roles");
+        if (saved) {
+            try {
+                const parsed = JSON.parse(saved) as string[];
+                if (Array.isArray(parsed)) {
+                    const valid = parsed.filter((r) => roles.includes(r));
+                    if (valid.length) setSelectedRoles(valid);
+                }
+            } catch {
+                // ignore
+            }
+        } else {
+            const legacy = localStorage.getItem("continuum_role");
+            if (legacy && roles.includes(legacy)) setSelectedRoles([legacy]);
         }
     }, []);
 
     const handleRoleClick = (role: string) => {
-        setSelectedRole(role);
-        localStorage.setItem("continuum_role", role);
+        setSelectedRoles((prev) => {
+            const next = prev.includes(role)
+                ? prev.filter((r) => r !== role)
+                : [...prev, role];
+            localStorage.setItem("continuum_roles", JSON.stringify(next));
+            return next;
+        });
     };
 
     const handleBack = () => {
-        navigate(-1);
+        navigate(getRoleBackPath());
     };
 
     const handleContinue = () => {
-        if (selectedRole) {
-            navigate("/loading"); // Navigate to animation page
+        if (selectedRoles.length > 0) {
+            navigate("/loading", { state: { from: "onboarding" } });
         }
     };
 
     const handleSkip = () => {
-        navigate("/dashboard"); // Placeholder destination
+        navigate("/dashboard");
     };
 
     return (
@@ -54,11 +76,15 @@ export default function RoleSelection() {
                 paddingBottom: "40px",
             }}
         >
-            {/* Header */}
-            <div className="w-full px-12 mb-12">
+            {/* Header - 134px so headline is 174px from top (40 + 134) */}
+            <div
+                className="w-full px-12"
+                style={{ height: "134px", display: "flex", alignItems: "flex-start" }}
+            >
                 <button
                     onClick={handleBack}
                     className="flex items-center gap-3 hover:opacity-70 transition-opacity"
+                    style={{ marginLeft: "0" }}
                 >
                     <ChevronLeft size={20} style={{ color: "#252014" }} />
                     <span
@@ -66,7 +92,10 @@ export default function RoleSelection() {
                             fontFamily: "Sarina",
                             fontWeight: 400,
                             fontSize: "20.89px",
+                            lineHeight: "23.42px",
+                            letterSpacing: "-0.02em",
                             color: "#252014",
+                            textAlign: "center",
                         }}
                     >
                         Continuum
@@ -74,14 +103,19 @@ export default function RoleSelection() {
                 </button>
             </div>
 
-            {/* Main Content */}
-            <div className="flex flex-col items-center gap-8 w-full max-w-[600px] px-6">
-                <div className="flex flex-col items-center gap-4 text-center">
+            {/* Main Content - same max-width and spacing as Usage/Collaboration */}
+            <div className="flex flex-col items-center w-full max-w-[511px] px-6">
+                <div
+                    className="flex flex-col gap-2 w-full text-center"
+                    style={{ marginBottom: "48px" }}
+                >
                     <h1
                         style={{
                             fontFamily: "Satoshi",
                             fontWeight: 700,
                             fontSize: "28px",
+                            lineHeight: "100%",
+                            letterSpacing: "-0.02em",
                             color: "#0B191F",
                         }}
                     >
@@ -89,73 +123,133 @@ export default function RoleSelection() {
                     </h1>
                     <p
                         style={{
-                            fontFamily: "Satoshi",
-                            fontWeight: 700,
-                            fontSize: "24px",
                             color: "#727D83",
+                            fontFamily: "Satoshi",
+                            fontSize: "24px",
+                            fontStyle: "normal",
+                            fontWeight: 700,
+                            lineHeight: "normal",
+                            letterSpacing: "-0.48px",
+                            textAlign: "center",
                         }}
                     >
                         This helps customise your experience
                     </p>
                 </div>
 
-                {/* Selected Count */}
-                <div className="w-full text-left" style={{ fontFamily: "Satoshi", color: "#727D83", fontSize: "14px" }}>
-                    {selectedRole ? "1 Selected" : "0 Selected"}
+                {/* Selected Count - small, light grey */}
+                <div
+                    className="w-full text-left mb-3"
+                    style={{
+                        fontFamily: "Satoshi",
+                        fontWeight: 500,
+                        color: "#727D83",
+                        fontSize: "14px",
+                        lineHeight: "100%",
+                    }}
+                >
+                    {selectedRoles.length} Selected
                 </div>
 
-                {/* Role Grid */}
-                <div className="flex flex-wrap gap-3 justify-start w-full">
+                {/* Role Grid - flex container per Figma */}
+                <div
+                    className="w-full"
+                    style={{
+                        display: "flex",
+                        alignItems: "flex-start",
+                        alignContent: "flex-start",
+                        gap: "8px",
+                        alignSelf: "stretch",
+                        flexWrap: "wrap",
+                        marginBottom: "190px",
+                    }}
+                >
                     {roles.map((role) => {
-                        const isSelected = selectedRole === role;
+                        const isSelected = selectedRoles.includes(role);
                         return (
                             <button
                                 key={role}
+                                type="button"
                                 onClick={() => handleRoleClick(role)}
-                                className={`
-                  flex items-center gap-2 px-4 py-2 rounded-lg border transition-all
-                  ${isSelected ? "bg-white border-[#0B191F]" : "bg-white border-[#D3D7DA] hover:border-gray-400"}
-                `}
+                                className="flex items-center gap-2 border transition-all rounded-lg"
                                 style={{
                                     height: "44px",
+                                    paddingLeft: "16px",
+                                    paddingRight: "16px",
+                                    fontFamily: "Satoshi",
+                                    fontWeight: 500,
+                                    fontSize: "14px",
+                                    lineHeight: "100%",
+                                    color: isSelected ? "#0B191F" : "#727D83",
+                                    backgroundColor: isSelected ? "#FFFFFF" : "#F5F6F7",
+                                    borderWidth: "1px",
+                                    borderColor: isSelected ? "#0B191F" : "#D3D7DA",
                                 }}
                             >
-                                <span
-                                    style={{
-                                        fontFamily: "Satoshi",
-                                        fontWeight: 500,
-                                        fontSize: "14px",
-                                        color: isSelected ? "#0B191F" : "#727D83",
-                                    }}
-                                >
-                                    {role}
-                                </span>
-                                {isSelected && <Check size={16} color="#3B82F6" strokeWidth={3} />}
+                                {role}
+                                {isSelected && <Check size={16} color="#2563EB" strokeWidth={3} />}
                             </button>
                         );
                     })}
                 </div>
 
-                {/* Actions */}
-                <div className="flex flex-col items-center gap-4 mt-8 w-full max-w-[400px]">
+                {/* Actions - Continue with blue gradient, Skip link below */}
+                <div
+                    className="flex flex-col items-center w-full"
+                    style={{ gap: "8px" }}
+                >
                     <button
+                        type="button"
                         onClick={handleContinue}
-                        disabled={!selectedRole}
-                        className="w-full py-3 rounded-lg text-white font-medium transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+                        disabled={selectedRoles.length === 0}
+                        className="text-white transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
                         style={{
-                            backgroundColor: "#2F95F6", // Matching the blue in the design
+                            display: "flex",
+                            width: "297px",
+                            height: "40px",
+                            padding: "8px 16px",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            gap: "8px",
+                            borderRadius: "8px",
+                            borderTop: "1px solid #FFF",
+                            background: "linear-gradient(142deg, #24B5F8 -123.02%, #5521FE 802.55%), linear-gradient(142deg, #24B5F8 -123.02%, #5521FE 802.55%), #24B5F8",
+                            boxShadow: "0 3px 9.3px 0 rgba(44, 158, 249, 0.10)",
                             fontFamily: "Satoshi",
+                            fontWeight: 500,
+                            fontSize: "16px",
                         }}
                     >
                         Continue
                     </button>
 
                     <button
+                        type="button"
                         onClick={handleSkip}
-                        className="text-[#727D83] hover:text-[#0B191F] transition-colors"
+                        className="text-[#727D83] transition-colors cursor-pointer"
                         style={{
+                            display: "flex",
+                            width: "297px",
+                            minWidth: "297px",
+                            height: "32px",
+                            minHeight: "32px",
+                            padding: "8px 16px",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            gap: "8px",
+                            borderRadius: "8px",
                             fontFamily: "Satoshi",
+                            fontWeight: 500,
                             fontSize: "14px",
+                            boxSizing: "border-box",
+                        }}
+                        onMouseEnter={(e) => {
+                            e.currentTarget.style.color = "#0B191F";
+                            e.currentTarget.style.backgroundColor = "rgba(0, 0, 0, 0.04)";
+                        }}
+                        onMouseLeave={(e) => {
+                            e.currentTarget.style.color = "#727D83";
+                            e.currentTarget.style.backgroundColor = "transparent";
                         }}
                     >
                         Skip for now

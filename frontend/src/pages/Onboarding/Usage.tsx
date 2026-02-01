@@ -15,7 +15,7 @@ const Usage = () => {
     if (mode === "work") {
       navigate("/onboarding/collaboration");
     } else {
-      navigate("/dashboard");
+      navigate("/onboarding/role");
     }
   };
 
@@ -32,8 +32,11 @@ const Usage = () => {
         paddingBottom: "40px",
       }}
     >
-      {/* Top-left Brand with Back Arrow */}
-      <div className="w-full px-12 mb-12">
+      {/* Header - 134px so headline is 174px from top (40 + 134) */}
+      <div
+        className="w-full px-12"
+        style={{ height: "134px", display: "flex", alignItems: "flex-start" }}
+      >
         <button
           onClick={handleBack}
           className="flex items-center gap-3 hover:opacity-70 transition-opacity"
