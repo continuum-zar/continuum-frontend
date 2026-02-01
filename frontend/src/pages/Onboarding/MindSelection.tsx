@@ -1,36 +1,28 @@
 import { useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { ChevronLeft, Check } from "lucide-react";
 
-const features = [
-    "Automations",
-    "Time tracking",
-    "Chat",
-    "Calendar",
-    "Chips",
-    "Sprints",
-    "Gantt charts",
-    "Forms",
-    "Tasks and projects",
-    "Dashboards",
-    "Workload",
-    "Docs and wikis",
-    "Whiteboards",
-    "CRM",
-    "Scheduling",
-    "AI",
-    "Boards and kanban",
-    "Goals and OKR's",
+const mindOptions = [
+    "Career building",
+    "Books and media",
+    "To-do list",
+    "Site or blog",
+    "Travel",
+    "Project tracking",
+    "Personal finance",
+    "Food and nutrition",
+    "Hobbies",
+    "Habit tracking",
     "Other",
 ];
 
-function getInitialSelectedFeatures(): string[] {
-    const saved = localStorage.getItem("continuum_feature_interests");
+function getInitialSelectedMind(): string[] {
+    const saved = localStorage.getItem("continuum_mind_interests");
     if (saved) {
         try {
             const parsed = JSON.parse(saved) as string[];
             if (Array.isArray(parsed)) {
-                const valid = parsed.filter((f) => features.includes(f));
+                const valid = parsed.filter((m) => mindOptions.includes(m));
                 if (valid.length) return valid;
             }
         } catch {
@@ -40,34 +32,29 @@ function getInitialSelectedFeatures(): string[] {
     return [];
 }
 
-export default function FeatureInterestSelection() {
+export default function MindSelection() {
     const navigate = useNavigate();
-    const location = useLocation();
-    const fromMind = (location.state as { from?: string } | null)?.from === "mind";
-    const [selectedFeatures, setSelectedFeatures] = useState<string[]>(
-        getInitialSelectedFeatures
+    const [selectedMind, setSelectedMind] = useState<string[]>(
+        getInitialSelectedMind
     );
 
-    const handleFeatureClick = (feature: string) => {
-        setSelectedFeatures((prev) => {
-            const next = prev.includes(feature)
-                ? prev.filter((f) => f !== feature)
-                : [...prev, feature];
-            localStorage.setItem(
-                "continuum_feature_interests",
-                JSON.stringify(next)
-            );
+    const handleMindClick = (option: string) => {
+        setSelectedMind((prev) => {
+            const next = prev.includes(option)
+                ? prev.filter((m) => m !== option)
+                : [...prev, option];
+            localStorage.setItem("continuum_mind_interests", JSON.stringify(next));
             return next;
         });
     };
 
     const handleBack = () => {
-        navigate(fromMind ? "/onboarding/mind" : "/onboarding/usage");
+        navigate("/onboarding/usage");
     };
 
     const handleContinue = () => {
-        if (selectedFeatures.length > 0) {
-            navigate("/loading", { state: { from: "onboarding" } });
+        if (selectedMind.length > 0) {
+            navigate("/onboarding/features", { state: { from: "mind" } });
         }
     };
 
@@ -121,13 +108,13 @@ export default function FeatureInterestSelection() {
                         style={{
                             fontFamily: "Satoshi",
                             fontWeight: 700,
-                            fontSize: "24px",
+                            fontSize: "28px",
                             lineHeight: "100%",
                             letterSpacing: "-0.02em",
                             color: "#0B191F",
                         }}
                     >
-                        What features are you interested in trying?
+                        What's on your mind?
                     </h1>
                     <p
                         style={{
@@ -156,10 +143,10 @@ export default function FeatureInterestSelection() {
                         lineHeight: "100%",
                     }}
                 >
-                    {selectedFeatures.length} Selected
+                    {selectedMind.length} Selected
                 </div>
 
-                {/* Feature chips - same layout as roles/function/use-case */}
+                {/* Tags grid - same layout as other onboarding pages */}
                 <div
                     className="w-full"
                     style={{
@@ -172,13 +159,13 @@ export default function FeatureInterestSelection() {
                         marginBottom: "190px",
                     }}
                 >
-                    {features.map((feature) => {
-                        const isSelected = selectedFeatures.includes(feature);
+                    {mindOptions.map((option) => {
+                        const isSelected = selectedMind.includes(option);
                         return (
                             <button
-                                key={feature}
+                                key={option}
                                 type="button"
-                                onClick={() => handleFeatureClick(feature)}
+                                onClick={() => handleMindClick(option)}
                                 className="flex items-center gap-2 border transition-all rounded-lg"
                                 style={{
                                     height: "44px",
@@ -194,7 +181,7 @@ export default function FeatureInterestSelection() {
                                     borderColor: isSelected ? "#0B191F" : "#D3D7DA",
                                 }}
                             >
-                                {feature}
+                                {option}
                                 {isSelected && (
                                     <Check size={16} color="#2563EB" strokeWidth={3} />
                                 )}
@@ -211,7 +198,7 @@ export default function FeatureInterestSelection() {
                     <button
                         type="button"
                         onClick={handleContinue}
-                        disabled={selectedFeatures.length === 0}
+                        disabled={selectedMind.length === 0}
                         className="text-white transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
                         style={{
                             display: "flex",
