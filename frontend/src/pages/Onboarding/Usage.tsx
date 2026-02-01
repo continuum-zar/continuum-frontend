@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ChevronLeft } from "lucide-react";
 import UsageOptionCard from "../../components/onboarding/UsageOptionCard";
@@ -8,14 +8,6 @@ type UsageMode = "work" | "personal" | "school";
 const Usage = () => {
   const navigate = useNavigate();
   const [selectedUsage, setSelectedUsage] = useState<UsageMode | null>(null);
-
-  // Load saved preference on mount
-  useEffect(() => {
-    const saved = localStorage.getItem("continuum_usage_mode") as UsageMode | null;
-    if (saved && ["work", "personal", "school"].includes(saved)) {
-      setSelectedUsage(saved);
-    }
-  }, []);
 
   const handleCardClick = (mode: UsageMode) => {
     setSelectedUsage(mode);
@@ -61,10 +53,10 @@ const Usage = () => {
         </button>
       </div>
 
-      {/* Main Content */}
-      <div className="flex flex-col items-center gap-12">
-        {/* Title and Subtitle */}
-        <div className="flex flex-col items-center gap-4">
+      {/* Main Content - centered block with left-aligned content */}
+      <div className="flex flex-col items-center w-full max-w-[511px] px-6">
+        {/* Title and Subtitle - centered to match Figma */}
+        <div className="flex flex-col gap-2 w-full text-center mb-12">
           <h1
             style={{
               fontFamily: "Satoshi",
@@ -73,7 +65,6 @@ const Usage = () => {
               lineHeight: "100%",
               letterSpacing: "-0.02em",
               color: "#0B191F",
-              textAlign: "center",
             }}
           >
             How do you want to use Continuum?
@@ -83,8 +74,9 @@ const Usage = () => {
               fontFamily: "Satoshi",
               fontWeight: 700,
               fontSize: "24px",
-              lineHeight: "100%",
-              letterSpacing: "-0.02em",
+              fontStyle: "normal",
+              lineHeight: "normal",
+              letterSpacing: "-0.48px",
               color: "#727D83",
               textAlign: "center",
             }}
@@ -93,23 +85,11 @@ const Usage = () => {
           </p>
         </div>
 
-        {/* Option Cards */}
-        <div className="flex flex-col items-center gap-6">
-          <UsageOptionCard
-            type="work"
-            isActive={selectedUsage === "work"}
-            onClick={() => handleCardClick("work")}
-          />
-          <UsageOptionCard
-            type="personal"
-            isActive={selectedUsage === "personal"}
-            onClick={() => handleCardClick("personal")}
-          />
-          <UsageOptionCard
-            type="school"
-            isActive={selectedUsage === "school"}
-            onClick={() => handleCardClick("school")}
-          />
+        {/* Option Cards - left-aligned to match title */}
+        <div className="flex flex-col w-full gap-6">
+          <UsageOptionCard type="work" onClick={() => handleCardClick("work")} />
+          <UsageOptionCard type="personal" onClick={() => handleCardClick("personal")} />
+          <UsageOptionCard type="school" onClick={() => handleCardClick("school")} />
         </div>
       </div>
     </div>

@@ -1,4 +1,24 @@
+import { useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+
+const LOADING_DURATION_MS = 2500;
+
 const Loading = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = (location.state as { from?: string } | null)?.from;
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      if (from === 'register') {
+        navigate('/onboarding/usage', { replace: true });
+      } else {
+        navigate('/login', { replace: true });
+      }
+    }, LOADING_DURATION_MS);
+    return () => window.clearTimeout(timer);
+  }, [from, navigate]);
+
   return (
     // Page Container - fills the viewport, gradient background
     <div className="relative flex justify-center items-center min-h-screen p-10 overflow-hidden bg-gradient-to-b from-brand-blue to-brand-cream">

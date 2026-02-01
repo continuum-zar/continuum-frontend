@@ -23,7 +23,7 @@ const ResetPassword = () => {
     }
 
     // Navigate to loading page after successful password reset
-    navigate("/loading");
+    navigate("/loading", { state: { from: 'reset' } });
   };
 
   const displayError = localError;
