@@ -30,6 +30,7 @@ import RoleSelection from './pages/Onboarding/RoleSelection';
 import FunctionSelection from './pages/Onboarding/FunctionSelection';
 import UseCaseSelection from './pages/Onboarding/UseCaseSelection';
 import FeatureInterestSelection from './pages/Onboarding/FeatureInterestSelection';
+import MindSelection from './pages/Onboarding/MindSelection';
 
 const router = createBrowserRouter([
   {
@@ -59,6 +60,7 @@ const router = createBrowserRouter([
       // Onboarding
       { path: 'onboarding/usage', element: <Usage /> },
       { path: 'onboarding/features', element: <FeatureInterestSelection /> },
+      { path: 'onboarding/mind', element: <MindSelection /> },
       { path: 'onboarding/collaboration', element: <Collaboration /> },
       { path: 'onboarding/role', element: <RoleSelection /> },
       { path: 'onboarding/function', element: <FunctionSelection /> },

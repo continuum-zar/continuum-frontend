@@ -17,7 +17,7 @@ const Usage = () => {
     } else if (mode === "personal") {
       navigate("/onboarding/features");
     } else {
-      navigate("/onboarding/role");
+      navigate("/onboarding/mind");
     }
   };
 
