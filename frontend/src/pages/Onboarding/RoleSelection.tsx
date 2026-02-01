@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ChevronLeft, Check } from "lucide-react";
 
@@ -20,28 +20,27 @@ const roles = [
     "Other",
 ];
 
+function getInitialSelectedRoles(): string[] {
+    const saved = localStorage.getItem("continuum_roles");
+    if (saved) {
+        try {
+            const parsed = JSON.parse(saved) as string[];
+            if (Array.isArray(parsed)) {
+                const valid = parsed.filter((r) => roles.includes(r));
+                if (valid.length) return valid;
+            }
+        } catch {
+            // ignore
+        }
+    }
+    const legacy = localStorage.getItem("continuum_role");
+    if (legacy && roles.includes(legacy)) return [legacy];
+    return [];
+}
+
 export default function RoleSelection() {
     const navigate = useNavigate();
-    const [selectedRoles, setSelectedRoles] = useState<string[]>([]);
-
-    // Load saved preferences (support legacy single role or array)
-    useEffect(() => {
-        const saved = localStorage.getItem("continuum_roles");
-        if (saved) {
-            try {
-                const parsed = JSON.parse(saved) as string[];
-                if (Array.isArray(parsed)) {
-                    const valid = parsed.filter((r) => roles.includes(r));
-                    if (valid.length) setSelectedRoles(valid);
-                }
-            } catch {
-                // ignore
-            }
-        } else {
-            const legacy = localStorage.getItem("continuum_role");
-            if (legacy && roles.includes(legacy)) setSelectedRoles([legacy]);
-        }
-    }, []);
+    const [selectedRoles, setSelectedRoles] = useState<string[]>(getInitialSelectedRoles);
 
     const handleRoleClick = (role: string) => {
         setSelectedRoles((prev) => {
