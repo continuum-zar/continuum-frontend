@@ -2,12 +2,27 @@ import { useState } from "react";
 
 type UsageType = "work" | "personal" | "school";
 
-interface UsageOptionCardProps {
-  type: UsageType;
+interface UsageOptionCardBaseProps {
   onClick: () => void;
 }
 
-const cardData = {
+interface UsageOptionCardWithType extends UsageOptionCardBaseProps {
+  type: UsageType;
+  title?: never;
+  description?: never;
+  iconSrc?: never;
+}
+
+interface UsageOptionCardWithCustom extends UsageOptionCardBaseProps {
+  type?: never;
+  title: string;
+  description: string;
+  iconSrc: string;
+}
+
+type UsageOptionCardProps = UsageOptionCardWithType | UsageOptionCardWithCustom;
+
+const usageCardData: Record<UsageType, { iconSrc: string; title: string; description: string }> = {
   work: {
     iconSrc: "/onboarding-icons/briefcase-business.svg",
     title: "For work",
@@ -25,9 +40,14 @@ const cardData = {
   },
 };
 
-export default function UsageOptionCard({ type, onClick }: UsageOptionCardProps) {
-  const data = cardData[type];
+export default function UsageOptionCard(props: UsageOptionCardProps) {
+  const { onClick } = props;
   const [isHovered, setIsHovered] = useState(false);
+
+  const data =
+    "type" in props && props.type
+      ? usageCardData[props.type]
+      : { title: props.title, description: props.description, iconSrc: props.iconSrc };
 
   const isActive = isHovered;
 
@@ -54,8 +74,9 @@ export default function UsageOptionCard({ type, onClick }: UsageOptionCardProps)
         display: "flex",
         alignItems: "center",
         gap: "76.3px",
-        opacity: 1,
-        transition: "border-color 0.15s ease, background-color 0.15s ease",
+        opacity: isActive ? 1 : 0.65,
+        transition:
+          "opacity 0.2s ease, border-color 0.2s ease, filter 0.2s ease, color 0.2s ease",
       }}
     >
       {/* Icon */}
@@ -66,17 +87,14 @@ export default function UsageOptionCard({ type, onClick }: UsageOptionCardProps)
           style={{
             width: "68px",
             height: "68px",
-            opacity: 1,
-            // Inactive: faded. Active: black (#0B191F) so all three icons match on hover
-            filter: isActive ? "brightness(0)" : "opacity(0.7)",
-            transition: "filter 0.15s ease",
+            filter: isActive ? "brightness(0)" : "opacity(0.75)",
+            transition: "filter 0.2s ease",
           }}
         />
       </div>
 
       {/* Text Block */}
       <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-        {/* Title */}
         <div
           style={{
             fontFamily: "Satoshi",
@@ -85,12 +103,11 @@ export default function UsageOptionCard({ type, onClick }: UsageOptionCardProps)
             lineHeight: "100%",
             letterSpacing: "0%",
             color: isActive ? "#0B191F" : "#727D83",
+            transition: "color 0.2s ease",
           }}
         >
           {data.title}
         </div>
-
-        {/* Description */}
         <div
           style={{
             fontFamily: "Satoshi",
@@ -98,7 +115,9 @@ export default function UsageOptionCard({ type, onClick }: UsageOptionCardProps)
             fontSize: "16px",
             lineHeight: "100%",
             letterSpacing: "0%",
-            color: "#727D83",
+            color: isActive ? "#0B191F" : "#727D83",
+            opacity: isActive ? 1 : 0.9,
+            transition: "color 0.2s ease, opacity 0.2s ease",
           }}
         >
           {data.description}

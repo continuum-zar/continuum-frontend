@@ -12,8 +12,11 @@ const Usage = () => {
   const handleCardClick = (mode: UsageMode) => {
     setSelectedUsage(mode);
     localStorage.setItem("continuum_usage_mode", mode);
-    // Navigate to dashboard after selection (placeholder)
-    navigate("/dashboard");
+    if (mode === "work") {
+      navigate("/onboarding/collaboration");
+    } else {
+      navigate("/dashboard");
+    }
   };
 
   const handleBack = () => {
