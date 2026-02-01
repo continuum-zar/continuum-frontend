@@ -28,6 +28,7 @@ import Usage from './pages/Onboarding/Usage';
 import Collaboration from './pages/Onboarding/Collaboration';
 import RoleSelection from './pages/Onboarding/RoleSelection';
 import FunctionSelection from './pages/Onboarding/FunctionSelection';
+import UseCaseSelection from './pages/Onboarding/UseCaseSelection';
 
 const router = createBrowserRouter([
   {
@@ -59,6 +60,7 @@ const router = createBrowserRouter([
       { path: 'onboarding/collaboration', element: <Collaboration /> },
       { path: 'onboarding/role', element: <RoleSelection /> },
       { path: 'onboarding/function', element: <FunctionSelection /> },
+      { path: 'onboarding/use-case', element: <UseCaseSelection /> },
     ],
   },
 ]);
