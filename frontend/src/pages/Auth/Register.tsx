@@ -113,19 +113,13 @@ const Register = () => {
     }
 
     try {
-      // Map 'surname' to 'last_name' for backend
-      const result = await register(
+      await register(
         formData.email,
         formData.password,
         formData.firstName,
-        formData.surname  // useAuth expects last_name
+        formData.surname
       );
-      //for now i will navigate it to the email verification page
-      if (result) {
-        navigate('/email-verification', { state: { email: formData.email } });
-      }
-      //option 2 would be to navigate it to the dashboard page and auto login the user
-      // navigate('/dashboard');
+      navigate('/email-verification', { state: { email: formData.email } });
     } catch (err) {
       console.error('Registration failed:', err);
     }

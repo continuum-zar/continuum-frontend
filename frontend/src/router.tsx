@@ -36,14 +36,14 @@ const router = createBrowserRouter([
       // Landing
       { index: true, element: <Landing /> },
 
-      // Auth
+      // Auth (register/sign-up not wrapped in PublicRoute so "Sign up" from landing always shows sign-up flow)
       { path: 'login', element: <PublicRoute><Login /></PublicRoute> },
-      { path: 'register', element: <PublicRoute><Register /></PublicRoute> },
+      { path: 'register', element: <Register /> },
       { path: 'forgot-password', element: <ForgotPassword /> },
       { path: 'reset-password', element: <ResetPassword /> },
       { path: 'loading', element: <Loading /> },
       { path: 'email-verification', element: <EmailVerification /> },
-      { path: 'sign-up', element: <PublicRoute><SignUp /></PublicRoute> },
+      { path: 'sign-up', element: <SignUp /> },
 
       // Dashboard
       { path: 'dashboard', element: <ProtectedRoute><Overview /></ProtectedRoute> },
