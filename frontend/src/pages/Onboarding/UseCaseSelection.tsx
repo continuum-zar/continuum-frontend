@@ -2,26 +2,28 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ChevronLeft, Check } from "lucide-react";
 
-const functions = [
-    "Administrative assistance",
-    "Communications",
-    "Customer experience",
-    "Data or Analytics",
-    "Design",
-    "Education professional",
-    "Engineering",
-    "Finance and Accounting",
+const useCases = [
+    "Design sprints",
+    "Mockup reviews",
+    "Content calendar",
+    "Creative planning",
+    "Employee onboarding",
+    "Creative requests and approvals",
+    "Strategic planning",
+    "Task management",
+    "Project management",
+    "Portfolio management",
+    "Growth management",
     "Other",
-    "Software development",
 ];
 
-function getInitialSelectedFunctions(): string[] {
-    const saved = localStorage.getItem("continuum_functions");
+function getInitialSelectedUseCases(): string[] {
+    const saved = localStorage.getItem("continuum_use_cases");
     if (saved) {
         try {
             const parsed = JSON.parse(saved) as string[];
             if (Array.isArray(parsed)) {
-                const valid = parsed.filter((f) => functions.includes(f));
+                const valid = parsed.filter((u) => useCases.includes(u));
                 if (valid.length) return valid;
             }
         } catch {
@@ -31,29 +33,29 @@ function getInitialSelectedFunctions(): string[] {
     return [];
 }
 
-export default function FunctionSelection() {
+export default function UseCaseSelection() {
     const navigate = useNavigate();
-    const [selectedFunctions, setSelectedFunctions] = useState<string[]>(
-        getInitialSelectedFunctions
+    const [selectedUseCases, setSelectedUseCases] = useState<string[]>(
+        getInitialSelectedUseCases
     );
 
-    const handleFunctionClick = (fn: string) => {
-        setSelectedFunctions((prev) => {
-            const next = prev.includes(fn)
-                ? prev.filter((f) => f !== fn)
-                : [...prev, fn];
-            localStorage.setItem("continuum_functions", JSON.stringify(next));
+    const handleUseCaseClick = (useCase: string) => {
+        setSelectedUseCases((prev) => {
+            const next = prev.includes(useCase)
+                ? prev.filter((u) => u !== useCase)
+                : [...prev, useCase];
+            localStorage.setItem("continuum_use_cases", JSON.stringify(next));
             return next;
         });
     };
 
     const handleBack = () => {
-        navigate("/onboarding/role");
+        navigate("/onboarding/function");
     };
 
     const handleContinue = () => {
-        if (selectedFunctions.length > 0) {
-            navigate("/onboarding/use-case");
+        if (selectedUseCases.length > 0) {
+            navigate("/loading", { state: { from: "onboarding" } });
         }
     };
 
@@ -70,7 +72,7 @@ export default function FunctionSelection() {
                 paddingBottom: "40px",
             }}
         >
-            {/* Header - same as roles page */}
+            {/* Header - same as roles/function page */}
             <div
                 className="w-full px-12"
                 style={{ height: "134px", display: "flex", alignItems: "flex-start" }}
@@ -97,7 +99,7 @@ export default function FunctionSelection() {
                 </button>
             </div>
 
-            {/* Main Content - same max-width and spacing as roles */}
+            {/* Main Content - same max-width and spacing */}
             <div className="flex flex-col items-center w-full max-w-[511px] px-6">
                 <div
                     className="flex flex-col gap-2 w-full text-center"
@@ -113,7 +115,7 @@ export default function FunctionSelection() {
                             color: "#0B191F",
                         }}
                     >
-                        What function best describes your work?
+                        What do you want to use Continuum for?
                     </h1>
                     <p
                         style={{
@@ -142,10 +144,10 @@ export default function FunctionSelection() {
                         lineHeight: "100%",
                     }}
                 >
-                    {selectedFunctions.length} Selected
+                    {selectedUseCases.length} Selected
                 </div>
 
-                {/* Function Grid - same layout as roles */}
+                {/* Use case chips - same layout as roles/function */}
                 <div
                     className="w-full"
                     style={{
@@ -158,13 +160,13 @@ export default function FunctionSelection() {
                         marginBottom: "190px",
                     }}
                 >
-                    {functions.map((fn) => {
-                        const isSelected = selectedFunctions.includes(fn);
+                    {useCases.map((useCase) => {
+                        const isSelected = selectedUseCases.includes(useCase);
                         return (
                             <button
-                                key={fn}
+                                key={useCase}
                                 type="button"
-                                onClick={() => handleFunctionClick(fn)}
+                                onClick={() => handleUseCaseClick(useCase)}
                                 className="flex items-center gap-2 border transition-all rounded-lg"
                                 style={{
                                     height: "44px",
@@ -180,7 +182,7 @@ export default function FunctionSelection() {
                                     borderColor: isSelected ? "#0B191F" : "#D3D7DA",
                                 }}
                             >
-                                {fn}
+                                {useCase}
                                 {isSelected && (
                                     <Check size={16} color="#2563EB" strokeWidth={3} />
                                 )}
@@ -189,7 +191,7 @@ export default function FunctionSelection() {
                     })}
                 </div>
 
-                {/* Actions - same as roles */}
+                {/* Actions - same as roles/function */}
                 <div
                     className="flex flex-col items-center w-full"
                     style={{ gap: "8px" }}
@@ -197,7 +199,7 @@ export default function FunctionSelection() {
                     <button
                         type="button"
                         onClick={handleContinue}
-                        disabled={selectedFunctions.length === 0}
+                        disabled={selectedUseCases.length === 0}
                         className="text-white transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
                         style={{
                             display: "flex",
