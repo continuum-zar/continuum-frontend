@@ -2,63 +2,58 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ChevronLeft, Check } from "lucide-react";
 
-function getRoleBackPath(): string {
-    const usage = localStorage.getItem("continuum_usage_mode");
-    if (usage === "work") return "/onboarding/collaboration";
-    return "/onboarding/usage";
-}
-
-const roles = [
-    "Team member",
-    "Manager",
-    "Director",
-    "Executive",
-    "Business owner",
-    "Freelancer",
-    "Student",
-    "Stakeholder",
+const functions = [
+    "Administrative assistance",
+    "Communications",
+    "Customer experience",
+    "Data or Analytics",
+    "Design",
+    "Education professional",
+    "Engineering",
+    "Finance and Accounting",
     "Other",
+    "Software development",
 ];
 
-function getInitialSelectedRoles(): string[] {
-    const saved = localStorage.getItem("continuum_roles");
+function getInitialSelectedFunctions(): string[] {
+    const saved = localStorage.getItem("continuum_functions");
     if (saved) {
         try {
             const parsed = JSON.parse(saved) as string[];
             if (Array.isArray(parsed)) {
-                const valid = parsed.filter((r) => roles.includes(r));
+                const valid = parsed.filter((f) => functions.includes(f));
                 if (valid.length) return valid;
             }
         } catch {
             // ignore
         }
     }
-    const legacy = localStorage.getItem("continuum_role");
-    if (legacy && roles.includes(legacy)) return [legacy];
     return [];
 }
 
-export default function RoleSelection() {
+export default function FunctionSelection() {
     const navigate = useNavigate();
-    const [selectedRoles, setSelectedRoles] = useState<string[]>(getInitialSelectedRoles);
+    const [selectedFunctions, setSelectedFunctions] = useState<string[]>(
+        getInitialSelectedFunctions
+    );
 
-    const handleRoleClick = (role: string) => {
-        setSelectedRoles((prev) => {
-            const next = prev.includes(role)
-                ? prev.filter((r) => r !== role)
-                : [...prev, role];
-            localStorage.setItem("continuum_roles", JSON.stringify(next));
+    const handleFunctionClick = (fn: string) => {
+        setSelectedFunctions((prev) => {
+            const next = prev.includes(fn)
+                ? prev.filter((f) => f !== fn)
+                : [...prev, fn];
+            localStorage.setItem("continuum_functions", JSON.stringify(next));
             return next;
         });
     };
 
     const handleBack = () => {
-        navigate(getRoleBackPath());
+        navigate("/onboarding/role");
     };
 
     const handleContinue = () => {
-        if (selectedRoles.length > 0) {
-            navigate("/onboarding/function");
+        if (selectedFunctions.length > 0) {
+            navigate("/loading", { state: { from: "onboarding" } });
         }
     };
 
@@ -75,7 +70,7 @@ export default function RoleSelection() {
                 paddingBottom: "40px",
             }}
         >
-            {/* Header - 134px so headline is 174px from top (40 + 134) */}
+            {/* Header - same as roles page */}
             <div
                 className="w-full px-12"
                 style={{ height: "134px", display: "flex", alignItems: "flex-start" }}
@@ -102,7 +97,7 @@ export default function RoleSelection() {
                 </button>
             </div>
 
-            {/* Main Content - same max-width and spacing as Usage/Collaboration */}
+            {/* Main Content - same max-width and spacing as roles */}
             <div className="flex flex-col items-center w-full max-w-[511px] px-6">
                 <div
                     className="flex flex-col gap-2 w-full text-center"
@@ -112,13 +107,13 @@ export default function RoleSelection() {
                         style={{
                             fontFamily: "Satoshi",
                             fontWeight: 700,
-                            fontSize: "28px",
+                            fontSize: "24px",
                             lineHeight: "100%",
                             letterSpacing: "-0.02em",
                             color: "#0B191F",
                         }}
                     >
-                        What's your role?
+                        What function best describes your work?
                     </h1>
                     <p
                         style={{
@@ -136,7 +131,7 @@ export default function RoleSelection() {
                     </p>
                 </div>
 
-                {/* Selected Count - small, light grey */}
+                {/* Selected Count */}
                 <div
                     className="w-full text-left mb-3"
                     style={{
@@ -147,10 +142,10 @@ export default function RoleSelection() {
                         lineHeight: "100%",
                     }}
                 >
-                    {selectedRoles.length} Selected
+                    {selectedFunctions.length} Selected
                 </div>
 
-                {/* Role Grid - flex container per Figma */}
+                {/* Function Grid - same layout as roles */}
                 <div
                     className="w-full"
                     style={{
@@ -163,13 +158,13 @@ export default function RoleSelection() {
                         marginBottom: "190px",
                     }}
                 >
-                    {roles.map((role) => {
-                        const isSelected = selectedRoles.includes(role);
+                    {functions.map((fn) => {
+                        const isSelected = selectedFunctions.includes(fn);
                         return (
                             <button
-                                key={role}
+                                key={fn}
                                 type="button"
-                                onClick={() => handleRoleClick(role)}
+                                onClick={() => handleFunctionClick(fn)}
                                 className="flex items-center gap-2 border transition-all rounded-lg"
                                 style={{
                                     height: "44px",
@@ -185,14 +180,16 @@ export default function RoleSelection() {
                                     borderColor: isSelected ? "#0B191F" : "#D3D7DA",
                                 }}
                             >
-                                {role}
-                                {isSelected && <Check size={16} color="#2563EB" strokeWidth={3} />}
+                                {fn}
+                                {isSelected && (
+                                    <Check size={16} color="#2563EB" strokeWidth={3} />
+                                )}
                             </button>
                         );
                     })}
                 </div>
 
-                {/* Actions - Continue with blue gradient, Skip link below */}
+                {/* Actions - same as roles */}
                 <div
                     className="flex flex-col items-center w-full"
                     style={{ gap: "8px" }}
@@ -200,7 +197,7 @@ export default function RoleSelection() {
                     <button
                         type="button"
                         onClick={handleContinue}
-                        disabled={selectedRoles.length === 0}
+                        disabled={selectedFunctions.length === 0}
                         className="text-white transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
                         style={{
                             display: "flex",
@@ -212,7 +209,8 @@ export default function RoleSelection() {
                             gap: "8px",
                             borderRadius: "8px",
                             borderTop: "1px solid #FFF",
-                            background: "linear-gradient(142deg, #24B5F8 -123.02%, #5521FE 802.55%), linear-gradient(142deg, #24B5F8 -123.02%, #5521FE 802.55%), #24B5F8",
+                            background:
+                                "linear-gradient(142deg, #24B5F8 -123.02%, #5521FE 802.55%), linear-gradient(142deg, #24B5F8 -123.02%, #5521FE 802.55%), #24B5F8",
                             boxShadow: "0 3px 9.3px 0 rgba(44, 158, 249, 0.10)",
                             fontFamily: "Satoshi",
                             fontWeight: 500,
@@ -244,7 +242,8 @@ export default function RoleSelection() {
                         }}
                         onMouseEnter={(e) => {
                             e.currentTarget.style.color = "#0B191F";
-                            e.currentTarget.style.backgroundColor = "rgba(0, 0, 0, 0.04)";
+                            e.currentTarget.style.backgroundColor =
+                                "rgba(0, 0, 0, 0.04)";
                         }}
                         onMouseLeave={(e) => {
                             e.currentTarget.style.color = "#727D83";
