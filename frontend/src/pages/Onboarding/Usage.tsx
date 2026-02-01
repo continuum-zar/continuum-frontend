@@ -14,6 +14,8 @@ const Usage = () => {
     localStorage.setItem("continuum_usage_mode", mode);
     if (mode === "work") {
       navigate("/onboarding/collaboration");
+    } else if (mode === "personal") {
+      navigate("/onboarding/features");
     } else {
       navigate("/onboarding/role");
     }
