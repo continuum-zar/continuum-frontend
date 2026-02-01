@@ -1,26 +1,19 @@
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ChevronLeft } from "lucide-react";
 import UsageOptionCard from "../../components/onboarding/UsageOptionCard";
 
-type UsageMode = "work" | "personal" | "school";
+type CollaborationMode = "with-others" | "on-my-own";
 
-const Usage = () => {
+const Collaboration = () => {
   const navigate = useNavigate();
-  const [, setSelectedUsage] = useState<UsageMode | null>(null);
 
-  const handleCardClick = (mode: UsageMode) => {
-    setSelectedUsage(mode);
-    localStorage.setItem("continuum_usage_mode", mode);
-    if (mode === "work") {
-      navigate("/onboarding/collaboration");
-    } else {
-      navigate("/dashboard");
-    }
+  const handleCardClick = (mode: CollaborationMode) => {
+    localStorage.setItem("continuum_collaboration_mode", mode);
+    navigate("/dashboard");
   };
 
   const handleBack = () => {
-    navigate(-1);
+    navigate("/onboarding/usage");
   };
 
   return (
@@ -32,7 +25,7 @@ const Usage = () => {
         paddingBottom: "40px",
       }}
     >
-      {/* Top-left Brand with Back Arrow */}
+      {/* Top-left Brand with Back Arrow - match Usage layout */}
       <div className="w-full px-12 mb-12">
         <button
           onClick={handleBack}
@@ -56,9 +49,8 @@ const Usage = () => {
         </button>
       </div>
 
-      {/* Main Content - centered block with left-aligned content */}
+      {/* Main Content - same structure and max-width as Usage */}
       <div className="flex flex-col items-center w-full max-w-[511px] px-6">
-        {/* Title and Subtitle - centered to match Figma */}
         <div className="flex flex-col gap-2 w-full text-center mb-12">
           <h1
             style={{
@@ -70,7 +62,7 @@ const Usage = () => {
               color: "#0B191F",
             }}
           >
-            How do you want to use Continuum?
+            How do you want to collaborate?
           </h1>
           <p
             style={{
@@ -88,15 +80,23 @@ const Usage = () => {
           </p>
         </div>
 
-        {/* Option Cards - left-aligned to match title */}
         <div className="flex flex-col w-full gap-6">
-          <UsageOptionCard type="work" onClick={() => handleCardClick("work")} />
-          <UsageOptionCard type="personal" onClick={() => handleCardClick("personal")} />
-          <UsageOptionCard type="school" onClick={() => handleCardClick("school")} />
+          <UsageOptionCard
+            title="With others"
+            description="Work with your team in shared spaces"
+            iconSrc="/onboarding-icons/users-round.svg"
+            onClick={() => handleCardClick("with-others")}
+          />
+          <UsageOptionCard
+            title="On my own"
+            description="Use Continuum for your personal workflow"
+            iconSrc="/onboarding-icons/user-round.svg"
+            onClick={() => handleCardClick("on-my-own")}
+          />
         </div>
       </div>
     </div>
   );
 };
 
-export default Usage;
+export default Collaboration;

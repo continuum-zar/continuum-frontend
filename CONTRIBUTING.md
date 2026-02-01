@@ -1,4 +1,4 @@
-# Contributing to Continuum
+# Contributing to Continuum Frontend
 
 ## Pre-Commit Hooks (Local CI Runners)
 
@@ -13,8 +13,8 @@ Run the setup script from the project root:
 ```
 
 This will:
-- Install backend Python dependencies (including pylint, mypy, black, isort)
 - Install frontend npm dependencies
+- Install pre-commit (in a local `.venv` if not already installed)
 - Configure Git pre-commit and pre-push hooks
 
 ### Manual Setup
@@ -22,19 +22,17 @@ This will:
 If you prefer to set things up manually:
 
 ```bash
-# 1. Set up backend
-cd backend
-python3 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
-
-# 2. Set up frontend
-cd ../continuum-frontend
+# 1. Set up frontend
+cd frontend
 npm install
 
-# 3. Install pre-commit hooks
+# 2. Install pre-commit (if not already installed)
 cd ..
-source backend/venv/bin/activate
+python3 -m venv .venv
+source .venv/bin/activate
+pip install pre-commit
+
+# 3. Install git hooks
 pre-commit install
 pre-commit install --hook-type pre-push
 ```
@@ -51,23 +49,14 @@ When you run `git commit`, the following checks run automatically:
 | Trailing whitespace | Removes trailing whitespace |
 | End of file fixer | Ensures files end with a newline |
 | YAML/JSON validation | Validates YAML and JSON syntax |
-| Large file check | Blocks files > 1MB |
+| Large file check | Blocks files > 2MB (increased for SVG assets) |
 | Merge conflict check | Detects merge conflict markers |
 | Private key detection | Prevents committing secrets |
-
-### Backend Checks (Python)
-| Check | Description |
-|-------|-------------|
-| **Black** | Auto-formats Python code |
-| **isort** | Sorts and organizes imports |
-| **Pylint** | Static code analysis for bugs and style issues |
-| **Mypy** | Static type checking |
-| **pytest** | Runs the test suite |
 
 ### Frontend Checks (TypeScript/React)
 | Check | Description |
 |-------|-------------|
-| **TypeScript** | Type checking via `tsc --noEmit` |
+| **TypeScript** | Type checking via `npm run typecheck` |
 | **ESLint** | Linting for TypeScript/React |
 
 ### On Push Only
@@ -84,8 +73,9 @@ When you run `git commit`, the following checks run automatically:
 pre-commit run --all-files
 
 # Run a specific hook
-pre-commit run backend-pylint --all-files
 pre-commit run frontend-typecheck --all-files
+pre-commit run frontend-lint --all-files
+pre-commit run frontend-build --all-files
 
 # Run hooks on staged files only
 pre-commit run
@@ -95,45 +85,18 @@ pre-commit run
 
 | Hook ID | Description |
 |---------|-------------|
-| `backend-pylint` | Python linting |
-| `backend-mypy` | Python type checking |
-| `backend-tests` | Python tests (pytest) |
 | `frontend-typecheck` | TypeScript type checking |
 | `frontend-lint` | ESLint |
-| `frontend-build` | Build verification |
-| `black` | Python formatting |
-| `isort` | Python import sorting |
+| `frontend-build` | Build verification (pre-push only) |
 
 ---
 
 ## Fixing Common Issues
 
-### Backend (Python)
+### TypeScript/React
 
 ```bash
-cd backend
-source venv/bin/activate
-
-# See all pylint issues
-pylint app --rcfile=.pylintrc
-
-# Auto-format code with Black
-black app --line-length=100
-
-# Sort imports
-isort app --profile=black --line-length=100
-
-# Run type checker
-mypy app --ignore-missing-imports
-
-# Run tests
-pytest tests -v
-```
-
-### Frontend (TypeScript/React)
-
-```bash
-cd continuum-frontend
+cd frontend
 
 # See all lint errors
 npm run lint
@@ -152,14 +115,6 @@ npm run build
 
 ## Common Errors and Solutions
 
-### Python
-
-| Error | Solution |
-|-------|----------|
-| Pylint: `line-too-long` | Break line or use Black to format |
-| Mypy: `Missing type hints` | Add type annotations |
-| Import error | Check virtual environment is activated |
-
 ### TypeScript/React
 
 | Error | Solution |
@@ -167,6 +122,7 @@ npm run build
 | `no-unused-vars` | Remove or use the variable |
 | `no-explicit-any` | Replace `any` with a proper type |
 | `react-hooks/exhaustive-deps` | Add missing dependencies to the array |
+| TypeScript type errors | Add proper type annotations |
 
 ---
 
@@ -186,10 +142,16 @@ git commit --no-verify -m "your message"
 
 ### "pre-commit: command not found"
 
-Ensure you've activated the backend virtual environment:
+If you used the setup script, pre-commit is in `.venv`. Run:
 
 ```bash
-source backend/venv/bin/activate
+source .venv/bin/activate
+```
+
+Or run pre-commit directly:
+
+```bash
+.venv/bin/pre-commit run --all-files
 ```
 
 ### Hooks not running
@@ -197,19 +159,9 @@ source backend/venv/bin/activate
 Re-install the hooks:
 
 ```bash
-source backend/venv/bin/activate
+source .venv/bin/activate
 pre-commit install
 pre-commit install --hook-type pre-push
-```
-
-### Backend tests failing
-
-Make sure you have the test database set up:
-
-```bash
-cd backend
-source venv/bin/activate
-pytest tests -v --tb=long
 ```
 
 ### Frontend npm errors
@@ -217,26 +169,25 @@ pytest tests -v --tb=long
 Re-install dependencies:
 
 ```bash
-cd continuum-frontend
+cd frontend
 rm -rf node_modules
 npm install
+```
+
+### Build failing
+
+Make sure you're running from the correct directory:
+
+```bash
+cd frontend
+npm run build
 ```
 
 ---
 
 ## Available Scripts
 
-### Backend (`backend/`)
-
-| Script | Description |
-|--------|-------------|
-| `pytest tests` | Run test suite |
-| `pylint app` | Run linter |
-| `mypy app` | Run type checker |
-| `black app` | Format code |
-| `alembic upgrade head` | Run database migrations |
-
-### Frontend (`continuum-frontend/`)
+### Frontend (`frontend/`)
 
 | Script | Description |
 |--------|-------------|
@@ -246,3 +197,31 @@ npm install
 | `npm run lint:fix` | Run ESLint with auto-fix |
 | `npm run typecheck` | Run TypeScript type checking |
 | `npm run preview` | Preview production build |
+
+---
+
+## Project Structure
+
+```
+continuum-frontend/
+├── frontend/
+│   ├── src/
+│   │   ├── api/          # API client functions
+│   │   ├── assets/       # Static assets
+│   │   ├── components/   # React components
+│   │   ├── data/         # Mock data
+│   │   ├── hooks/        # Custom React hooks
+│   │   ├── pages/        # Page components
+│   │   ├── store/        # State management
+│   │   ├── App.tsx       # Main app component
+│   │   ├── main.tsx      # Entry point
+│   │   └── router.tsx    # Route definitions
+│   ├── public/           # Public static files
+│   ├── package.json      # npm dependencies
+│   ├── tsconfig.json     # TypeScript config
+│   ├── vite.config.ts    # Vite config
+│   └── eslint.config.js  # ESLint config
+├── .pre-commit-config.yaml
+├── setup-hooks.sh
+└── docker-compose.yml
+```
