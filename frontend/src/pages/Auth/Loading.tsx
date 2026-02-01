@@ -12,6 +12,8 @@ const Loading = () => {
     const timer = window.setTimeout(() => {
       if (from === 'register') {
         navigate('/onboarding/usage', { replace: true });
+      } else if (from === 'onboarding') {
+        navigate('/dashboard', { replace: true });
       } else {
         navigate('/login', { replace: true });
       }

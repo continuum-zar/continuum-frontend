@@ -9,7 +9,7 @@ const Collaboration = () => {
 
   const handleCardClick = (mode: CollaborationMode) => {
     localStorage.setItem("continuum_collaboration_mode", mode);
-    navigate("/dashboard");
+    navigate("/onboarding/role");
   };
 
   const handleBack = () => {
@@ -25,8 +25,11 @@ const Collaboration = () => {
         paddingBottom: "40px",
       }}
     >
-      {/* Top-left Brand with Back Arrow - match Usage layout */}
-      <div className="w-full px-12 mb-12">
+      {/* Header - 134px so headline is 174px from top (40 + 134) */}
+      <div
+        className="w-full px-12"
+        style={{ height: "134px", display: "flex", alignItems: "flex-start" }}
+      >
         <button
           onClick={handleBack}
           className="flex items-center gap-3 hover:opacity-70 transition-opacity"
