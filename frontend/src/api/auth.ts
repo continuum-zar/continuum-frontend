@@ -70,14 +70,16 @@ export const authApi = {
     return mockUser();
   },
 
-  forgotPassword: async (_email: string): Promise<{ message: string }> => {
+  forgotPassword: async (email: string): Promise<{ message: string }> => {
+    void email;
     return { message: 'Check your email for reset instructions.' };
   },
 
-  resetPassword: async (_data: {
+  resetPassword: async (data: {
     token: string;
     new_password: string;
   }): Promise<{ message: string }> => {
+    void data;
     return { message: 'Password has been reset.' };
   },
 };

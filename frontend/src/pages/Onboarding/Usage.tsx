@@ -7,7 +7,7 @@ type UsageMode = "work" | "personal" | "school";
 
 const Usage = () => {
   const navigate = useNavigate();
-  const [selectedUsage, setSelectedUsage] = useState<UsageMode | null>(null);
+  const [, setSelectedUsage] = useState<UsageMode | null>(null);
 
   const handleCardClick = (mode: UsageMode) => {
     setSelectedUsage(mode);

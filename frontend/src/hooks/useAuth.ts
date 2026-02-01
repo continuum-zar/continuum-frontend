@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useAuthStore } from '../store/authStore';
 
 const MOCK_TOKEN = 'local-auth-token';
@@ -14,14 +14,11 @@ function createMockUser(overrides: { email?: string; first_name?: string; last_n
 
 export const useAuth = () => {
   const { user, setAuth, clearAuth } = useAuthStore();
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    setLoading(false);
-  }, []);
-
-  const login = async (email: string, _password: string) => {
+  const login = async (email: string, password: string) => {
+    void password;
     setLoading(true);
     setError(null);
     const mockUser = createMockUser({ email });
@@ -32,10 +29,11 @@ export const useAuth = () => {
 
   const register = async (
     email: string,
-    _password: string,
+    password: string,
     first_name: string,
     last_name: string
   ) => {
+    void password;
     setLoading(true);
     setError(null);
     const mockUser = createMockUser({ email, first_name, last_name });
@@ -48,14 +46,17 @@ export const useAuth = () => {
     clearAuth();
   };
 
-  const forgotPassword = async (_email: string) => {
+  const forgotPassword = async (email: string) => {
+    void email;
     setLoading(true);
     setError(null);
     setLoading(false);
     return { message: 'Check your email for reset instructions.' };
   };
 
-  const resetPassword = async (_token: string, _newPassword: string) => {
+  const resetPassword = async (token: string, newPassword: string) => {
+    void token;
+    void newPassword;
     setLoading(true);
     setError(null);
     setLoading(false);
